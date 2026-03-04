@@ -19,12 +19,6 @@ public class BankAccount {
         this.balance = balance;
     }
 
-    private void validateBalance(BigDecimal balance) {
-        if (balance.intValue() < 0) {
-            throw new IllegalArgumentException("Balance should be zero or greater");
-        }
-    }
-
     public BigDecimal getBalance() {
         return this.balance;
     }
@@ -37,9 +31,10 @@ public class BankAccount {
     public void withdraw(BigDecimal amount) {
         validateAmount(amount);
 
-        if (amount.intValue() > this.balance.intValue()) {
+        if (amount.compareTo(this.balance) > 0) {
             throw new IllegalStateException("Insufficient funds");
         }
+
         this.balance = this.balance.subtract(amount);
     }
 
@@ -54,7 +49,7 @@ public class BankAccount {
         }
 
         BankAccount that = (BankAccount) object;
-        return Objects.equals(accountNumber, that.accountNumber) && Objects.equals(accountHolderName, that.accountHolderName);
+        return Objects.equals(accountNumber, that.accountNumber);
     }
 
     @Override
@@ -69,6 +64,15 @@ public class BankAccount {
                 ", accountHolderName='" + accountHolderName + '\'' +
                 ", balance=" + balance +
                 '}';
+    }
+
+    private void validateBalance(BigDecimal balance) {
+        if(balance == null) {
+            throw new IllegalArgumentException("Balance is required");
+        }
+        if (balance.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("Balance should be zero or greater");
+        }
     }
 
     private void validateAccountHolderName(String accountHolderName) {
@@ -88,7 +92,7 @@ public class BankAccount {
             throw new IllegalArgumentException("Amount is required");
         }
 
-        if (amount.intValue() <= 0) {
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("amount should be greater than zero");
         }
     }
