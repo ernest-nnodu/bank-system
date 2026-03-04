@@ -62,6 +62,15 @@ public class BankAccount {
         return Objects.hash(accountNumber, accountHolderName);
     }
 
+    @Override
+    public String toString() {
+        return "BankAccount{" +
+                "accountNumber='" + accountNumber + '\'' +
+                ", accountHolderName='" + accountHolderName + '\'' +
+                ", balance=" + balance +
+                '}';
+    }
+
     private void validateAccountHolderName(String accountHolderName) {
         if (accountHolderName == null || accountHolderName.isBlank()) {
             throw new IllegalArgumentException("Account holder name is required");
