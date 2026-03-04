@@ -1,6 +1,7 @@
 package com.jackalcode.practice.day2;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 public class BankAccount {
 
@@ -40,6 +41,25 @@ public class BankAccount {
             throw new IllegalStateException("Insufficient funds");
         }
         this.balance = this.balance.subtract(amount);
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) {
+            return true;
+        }
+
+        if (object == null || getClass() != object.getClass()) {
+            return false;
+        }
+
+        BankAccount that = (BankAccount) object;
+        return Objects.equals(accountNumber, that.accountNumber) && Objects.equals(accountHolderName, that.accountHolderName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(accountNumber, accountHolderName);
     }
 
     private void validateAccountHolderName(String accountHolderName) {
