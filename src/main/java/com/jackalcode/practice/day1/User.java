@@ -63,7 +63,7 @@ public class User {
 
     private void validateAge(int age) {
         if (age < 0) {
-            throw new IllegalArgumentException("Age must be a positive number");
+            throw new IllegalArgumentException("Age must be zero or greater");
         }
     }
 
