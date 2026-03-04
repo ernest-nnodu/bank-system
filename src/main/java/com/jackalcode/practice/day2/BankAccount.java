@@ -25,4 +25,14 @@ public class BankAccount {
         this.accountHolderName = accountHolderName;
         this.balance = balance;
     }
+
+    public BigDecimal getBalance() {
+        return this.balance;
+    }
+
+    public void deposit(BigDecimal bigDecimal) {
+    }
+
+    public void withdraw(BigDecimal bigDecimal) {
+    }
 }
