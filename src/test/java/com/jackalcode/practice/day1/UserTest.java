@@ -69,4 +69,60 @@ class UserTest {
         assertTrue(output.contains("john@email.com"));
         assertTrue(output.contains("25"));
     }
+
+    @Test
+    void shouldUpdateEmailSuccessfully() {
+        User user = new User("john", "john@email.com", 25);
+
+        user.updateEmail("new@email.com");
+
+        assertEquals("new@email.com", user.getEmail());
+    }
+
+    @Test
+    void shouldThrowExceptionWhenNewEmailIsNull() {
+        User user = new User("john", "john@email.com", 25);
+
+        assertThrows(IllegalArgumentException.class,
+                () -> user.updateEmail(null));
+    }
+
+    @Test
+    void shouldThrowExceptionWhenNewEmailIsBlank() {
+        User user = new User("john", "john@email.com", 25);
+
+        assertThrows(IllegalArgumentException.class,
+                () -> user.updateEmail("   "));
+    }
+
+    @Test
+    void shouldThrowExceptionWhenNewEmailDoesNotContainAtSymbol() {
+        User user = new User("john", "john@email.com", 25);
+
+        assertThrows(IllegalArgumentException.class,
+                () -> user.updateEmail("invalidemail.com"));
+    }
+
+    @Test
+    void shouldNotChangeEmailWhenUpdateFails() {
+        User user = new User("john", "john@email.com", 25);
+
+        try {
+            user.updateEmail("invalid");
+        } catch (IllegalArgumentException ignored) {}
+
+        assertEquals("john@email.com", user.getEmail());
+    }
+
+    @Test
+    void updatingEmailShouldAffectEqualityIfEmailIsPartOfEquals() {
+        User user1 = new User("john", "john@email.com", 25);
+        User user2 = new User("john", "john@email.com", 30);
+
+        assertEquals(user1, user2);
+
+        user1.updateEmail("new@email.com");
+
+        assertNotEquals(user1, user2);
+    }
 }
