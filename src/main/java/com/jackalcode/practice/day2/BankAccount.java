@@ -6,7 +6,7 @@ import java.util.Objects;
 public class BankAccount {
 
     private final String accountNumber;
-    private final String accountHolderName;
+    private String accountHolderName;
     private BigDecimal balance;
 
     public BankAccount(String accountNumber, String accountHolderName, BigDecimal balance) {
@@ -23,12 +23,14 @@ public class BankAccount {
         return this.balance;
     }
 
-    public void deposit(BigDecimal amount) {
+    public BigDecimal deposit(BigDecimal amount) {
         validateAmount(amount);
         this.balance = this.balance.add(amount);
+
+        return balance;
     }
 
-    public void withdraw(BigDecimal amount) {
+    public BigDecimal withdraw(BigDecimal amount) {
         validateAmount(amount);
 
         if (amount.compareTo(this.balance) > 0) {
@@ -36,6 +38,8 @@ public class BankAccount {
         }
 
         this.balance = this.balance.subtract(amount);
+
+        return balance;
     }
 
     @Override
@@ -54,7 +58,7 @@ public class BankAccount {
 
     @Override
     public int hashCode() {
-        return Objects.hash(accountNumber, accountHolderName);
+        return Objects.hash(accountNumber);
     }
 
     @Override
