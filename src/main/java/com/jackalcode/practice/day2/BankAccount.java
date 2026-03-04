@@ -5,18 +5,12 @@ import java.math.BigDecimal;
 public class BankAccount {
 
     private final String accountNumber;
-    private String accountHolderName;
+    private final String accountHolderName;
     private BigDecimal balance;
 
     public BankAccount(String accountNumber, String accountHolderName, BigDecimal balance) {
-        if (accountNumber == null || accountNumber.isBlank()) {
-            throw new IllegalArgumentException("Account number is required");
-        }
-
-        if (accountHolderName == null || accountHolderName.isBlank()) {
-            throw new IllegalArgumentException("Account holder name is required");
-        }
-
+        validateAccountNumber(accountNumber);
+        validateAccountHolderName(accountHolderName);
         validateBalance(balance);
 
         this.accountNumber = accountNumber;
@@ -39,7 +33,25 @@ public class BankAccount {
         this.balance = this.balance.add(amount);
     }
 
-    public void withdraw(BigDecimal bigDecimal) {
+    public void withdraw(BigDecimal amount) {
+        validateAmount(amount);
+
+        if (amount.intValue() > this.balance.intValue()) {
+            throw new IllegalStateException("Insufficient funds");
+        }
+        this.balance = this.balance.subtract(amount);
+    }
+
+    private void validateAccountHolderName(String accountHolderName) {
+        if (accountHolderName == null || accountHolderName.isBlank()) {
+            throw new IllegalArgumentException("Account holder name is required");
+        }
+    }
+
+    private void validateAccountNumber(String accountNumber) {
+        if (accountNumber == null || accountNumber.isBlank()) {
+            throw new IllegalArgumentException("Account number is required");
+        }
     }
 
     private void validateAmount(BigDecimal amount) {
