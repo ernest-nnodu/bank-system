@@ -1,4 +1,8 @@
 package com.jackalcode.practice.day2;
 
-public class InsufficientFundsException {
+public class InsufficientFundsException extends RuntimeException {
+
+    public InsufficientFundsException(String message) {
+        super(message);
+    }
 }

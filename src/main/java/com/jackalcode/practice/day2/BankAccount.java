@@ -34,12 +34,26 @@ public class BankAccount {
         validateAmount(amount);
 
         if (amount.compareTo(this.balance) > 0) {
-            throw new IllegalStateException("Insufficient funds");
+            throw new InsufficientFundsException("Account " + this.accountNumber + " have Insufficient funds");
         }
 
         this.balance = this.balance.subtract(amount);
 
         return balance;
+    }
+
+    public void transferTo(BankAccount target, BigDecimal amount) {
+        if (target == null) {
+            throw new IllegalArgumentException("Target account is required");
+        }
+
+        if (this.equals(target)) {
+            throw new IllegalArgumentException("Cannot transfer to the same account");
+        }
+
+        validateAmount(amount);
+        this.withdraw(amount);
+        target.deposit(amount);
     }
 
     @Override

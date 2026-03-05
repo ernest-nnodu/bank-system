@@ -89,7 +89,7 @@ class BankAccountTest {
         BankAccount account =
                 new BankAccount("123", "John", new BigDecimal("50"));
 
-        assertThrows(IllegalStateException.class,
+        assertThrows(InsufficientFundsException.class,
                 () -> account.withdraw(new BigDecimal("100")));
     }
 
@@ -100,7 +100,7 @@ class BankAccountTest {
 
         try {
             account.withdraw(new BigDecimal("200"));
-        } catch (IllegalStateException ignored) {}
+        } catch (InsufficientFundsException ignored) {}
 
         assertEquals(new BigDecimal("100"), account.getBalance());
     }
