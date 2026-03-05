@@ -23,14 +23,13 @@ public class BankAccount {
         return this.balance;
     }
 
-    public BigDecimal deposit(BigDecimal amount) {
+    public void deposit(BigDecimal amount) {
         validateAmount(amount);
         this.balance = this.balance.add(amount);
 
-        return balance;
     }
 
-    public BigDecimal withdraw(BigDecimal amount) {
+    public void withdraw(BigDecimal amount) {
         validateAmount(amount);
 
         if (amount.compareTo(this.balance) > 0) {
@@ -39,7 +38,6 @@ public class BankAccount {
 
         this.balance = this.balance.subtract(amount);
 
-        return balance;
     }
 
     public void transferTo(BankAccount target, BigDecimal amount) {
@@ -53,7 +51,12 @@ public class BankAccount {
 
         validateAmount(amount);
         this.withdraw(amount);
-        target.deposit(amount);
+        try {
+            target.deposit(amount);
+        } catch (Exception e) {
+            this.deposit(amount); // rollback
+            throw e;
+        }
     }
 
     @Override
