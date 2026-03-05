@@ -104,4 +104,75 @@ class BankAccountTest {
 
         assertEquals(new BigDecimal("100"), account.getBalance());
     }
+
+    @Test
+    void transferShouldMoveMoneyBetweenAccounts() {
+
+        BankAccount source =
+                new BankAccount("1", "Alice", new BigDecimal("100"));
+
+        BankAccount target =
+                new BankAccount("2", "Bob", new BigDecimal("50"));
+
+        source.transferTo(target, new BigDecimal("30"));
+
+        assertEquals(new BigDecimal("70"), source.getBalance());
+        assertEquals(new BigDecimal("80"), target.getBalance());
+    }
+
+    @Test
+    void transferShouldFailWhenInsufficientFunds() {
+
+        BankAccount source =
+                new BankAccount("1", "Alice", new BigDecimal("20"));
+
+        BankAccount target =
+                new BankAccount("2", "Bob", new BigDecimal("50"));
+
+        assertThrows(
+                InsufficientFundsException.class,
+                () -> source.transferTo(target, new BigDecimal("100"))
+        );
+    }
+
+    @Test
+    void transferShouldNotChangeBalancesIfItFails() {
+
+        BankAccount source =
+                new BankAccount("1", "Alice", new BigDecimal("20"));
+
+        BankAccount target =
+                new BankAccount("2", "Bob", new BigDecimal("50"));
+
+        try {
+            source.transferTo(target, new BigDecimal("100"));
+        } catch (InsufficientFundsException ignored) {}
+
+        assertEquals(new BigDecimal("20"), source.getBalance());
+        assertEquals(new BigDecimal("50"), target.getBalance());
+    }
+
+    @Test
+    void transferShouldRejectSameAccount() {
+
+        BankAccount account =
+                new BankAccount("1", "Alice", new BigDecimal("100"));
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> account.transferTo(account, new BigDecimal("10"))
+        );
+    }
+
+    @Test
+    void transferShouldRejectNullTarget() {
+
+        BankAccount account =
+                new BankAccount("1", "Alice", new BigDecimal("100"));
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> account.transferTo(null, new BigDecimal("10"))
+        );
+    }
 }
