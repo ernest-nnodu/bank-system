@@ -191,4 +191,18 @@ class BankAccountTest {
         assertEquals(TransactionType.DEPOSIT, transactions.get(0).getType());
         assertEquals(new BigDecimal("50"), transactions.get(0).getAmount());
     }
+
+    @Test
+    void withdraw_shouldRecordTransaction() {
+
+        BankAccount account =
+                new BankAccount("A1", "John", new BigDecimal("200"));
+
+        account.withdraw(new BigDecimal("50"));
+
+        List<Transaction> transactions = account.getTransactions();
+
+        assertEquals(1, transactions.size());
+        assertEquals(TransactionType.WITHDRAW, transactions.get(0).getType());
+    }
 }

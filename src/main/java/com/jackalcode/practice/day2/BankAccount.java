@@ -36,7 +36,7 @@ public class BankAccount {
         validateAmount(amount);
         this.balance = this.balance.add(amount);
         transactions.add(
-                new Transaction(this.accountNumber, TransactionType.DEPOSIT, amount, Instant.now())
+                new Transaction(accountNumber, TransactionType.DEPOSIT, amount, Instant.now())
         );
     }
 
@@ -48,6 +48,9 @@ public class BankAccount {
         }
 
         this.balance = this.balance.subtract(amount);
+        this.transactions.add(
+                new Transaction(accountNumber, TransactionType.WITHDRAW, amount, Instant.now())
+        );
 
     }
 
