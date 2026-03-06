@@ -45,7 +45,7 @@ public class BankAccount {
         validateAmount(amount);
         this.balance = this.balance.add(amount);
         transactions.add(
-                new Transaction(accountNumber, TransactionType.DEPOSIT, amount, Instant.now())
+                new Transaction(accountNumber, TransactionType.DEPOSIT, amount)
         );
     }
 
@@ -56,7 +56,7 @@ public class BankAccount {
 
         this.balance = this.balance.subtract(amount);
         this.transactions.add(
-                new Transaction(accountNumber, TransactionType.WITHDRAW, amount, Instant.now())
+                new Transaction(accountNumber, TransactionType.WITHDRAW, amount)
         );
 
     }
@@ -81,7 +81,7 @@ public class BankAccount {
         }
 
         this.transactions.add(
-                new Transaction(accountNumber, TransactionType.TRANSFER_OUT, amount, Instant.now())
+                new Transaction(accountNumber, TransactionType.TRANSFER_OUT, amount)
         );
     }
 
@@ -89,7 +89,7 @@ public class BankAccount {
         validateAmount(amount);
         this.balance = this.balance.add(amount);
         this.transactions.add(
-                new Transaction(accountNumber, TransactionType.TRANSFER_IN, amount, Instant.now())
+                new Transaction(accountNumber, TransactionType.TRANSFER_IN, amount)
         );
     }
 

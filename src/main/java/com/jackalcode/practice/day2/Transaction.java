@@ -13,12 +13,12 @@ public class Transaction {
     private final BigDecimal amount;
     private final Instant timestamp;
 
-    public Transaction(String accountNumber, TransactionType type, BigDecimal amount, Instant timestamp) {
+    public Transaction(String accountNumber, TransactionType type, BigDecimal amount) {
         this.id = UUID.randomUUID().toString();
         this.accountNumber = accountNumber;
         this.type = type;
         this.amount = amount;
-        this.timestamp = timestamp;
+        this.timestamp = Instant.now();
     }
 
     public String getId() {

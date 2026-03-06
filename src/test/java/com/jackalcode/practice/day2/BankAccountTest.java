@@ -246,4 +246,27 @@ class BankAccountTest {
                 () -> transactions.add(null)
         );
     }
+
+    @Test
+    void multipleOperations_shouldRecordAllTransactions() {
+
+        BankAccount account =
+                new BankAccount("A1", "John", new BigDecimal("100"));
+
+        account.deposit(new BigDecimal("50"));
+        account.withdraw(new BigDecimal("20"));
+
+        List<Transaction> transactions = account.getTransactions();
+
+        assertEquals(2, transactions.size());
+    }
+
+    @Test
+    void transaction_shouldHaveTimestamp() {
+
+        Transaction tx =
+                new Transaction("A1", TransactionType.DEPOSIT, new BigDecimal("10"));
+
+        assertNotNull(tx.getTimestamp());
+    }
 }
