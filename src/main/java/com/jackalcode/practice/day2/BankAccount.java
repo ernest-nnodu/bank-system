@@ -1,6 +1,9 @@
 package com.jackalcode.practice.day2;
 
 import java.math.BigDecimal;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class BankAccount {
@@ -8,8 +11,10 @@ public class BankAccount {
     private final String accountNumber;
     private String accountHolderName;
     private BigDecimal balance;
+    private final List<Transaction> transactions;
 
     public BankAccount(String accountNumber, String accountHolderName, BigDecimal balance) {
+        this.transactions = new ArrayList<>();
         validateAccountNumber(accountNumber);
         validateAccountHolderName(accountHolderName);
         validateBalance(balance);
@@ -23,10 +28,16 @@ public class BankAccount {
         return this.balance;
     }
 
+    public List<Transaction> getTransactions() {
+        return this.transactions;
+    }
+
     public void deposit(BigDecimal amount) {
         validateAmount(amount);
         this.balance = this.balance.add(amount);
-
+        transactions.add(
+                new Transaction(this.accountNumber, TransactionType.DEPOSIT, amount, Instant.now())
+        );
     }
 
     public void withdraw(BigDecimal amount) {

@@ -3,6 +3,7 @@ package com.jackalcode.practice.day2;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -174,5 +175,20 @@ class BankAccountTest {
                 IllegalArgumentException.class,
                 () -> account.transferTo(null, new BigDecimal("10"))
         );
+    }
+
+    @Test
+    void deposit_shouldRecordTransaction() {
+
+        BankAccount account =
+                new BankAccount("A1", "John", new BigDecimal("100"));
+
+        account.deposit(new BigDecimal("50"));
+
+        List<Transaction> transactions = account.getTransactions();
+
+        assertEquals(1, transactions.size());
+        assertEquals(TransactionType.DEPOSIT, transactions.get(0).getType());
+        assertEquals(new BigDecimal("50"), transactions.get(0).getAmount());
     }
 }
