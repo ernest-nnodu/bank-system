@@ -14,6 +14,7 @@ public class Transaction {
     private final Instant timestamp;
 
     public Transaction(String accountNumber, TransactionType type, BigDecimal amount) {
+        validateTransactionDetails(accountNumber, type, amount);
         this.id = UUID.randomUUID().toString();
         this.accountNumber = accountNumber;
         this.type = type;
@@ -62,5 +63,16 @@ public class Transaction {
                 ", amount=" + amount +
                 ", timestamp=" + timestamp +
                 '}';
+    }
+
+    private void validateTransactionDetails(String accountNumber, TransactionType type, BigDecimal amount) {
+        if(accountNumber == null || accountNumber.isBlank())
+            throw new IllegalArgumentException("Account number required");
+
+        if(type == null)
+            throw new IllegalArgumentException("Transaction type required");
+
+        if(amount == null || amount.compareTo(BigDecimal.ZERO) <= 0)
+            throw new IllegalArgumentException("Amount must be greater than zero");
     }
 }
