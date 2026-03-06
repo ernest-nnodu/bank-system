@@ -3,6 +3,7 @@ package com.jackalcode.practice.day2;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -37,7 +38,7 @@ public class BankAccount {
     }
 
     public List<Transaction> getTransactions() {
-        return this.transactions;
+        return Collections.unmodifiableList(this.transactions);
     }
 
     public void deposit(BigDecimal amount) {

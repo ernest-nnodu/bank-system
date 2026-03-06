@@ -230,4 +230,20 @@ class BankAccountTest {
                 target.getTransactions().get(0).getType()
         );
     }
+
+    @Test
+    void getTransactions_shouldReturnImmutableList() {
+
+        BankAccount account =
+                new BankAccount("A1", "John", new BigDecimal("100"));
+
+        account.deposit(new BigDecimal("10"));
+
+        List<Transaction> transactions = account.getTransactions();
+
+        assertThrows(
+                UnsupportedOperationException.class,
+                () -> transactions.add(null)
+        );
+    }
 }
