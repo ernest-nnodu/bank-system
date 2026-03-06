@@ -205,4 +205,29 @@ class BankAccountTest {
         assertEquals(1, transactions.size());
         assertEquals(TransactionType.WITHDRAW, transactions.get(0).getType());
     }
+
+    @Test
+    void transfer_shouldCreateTransactionsForBothAccounts() {
+
+        BankAccount source =
+                new BankAccount("A1", "John", new BigDecimal("200"));
+
+        BankAccount target =
+                new BankAccount("A2", "Jane", new BigDecimal("100"));
+
+        source.transferTo(target, new BigDecimal("50"));
+
+        assertEquals(1, source.getTransactions().size());
+        assertEquals(1, target.getTransactions().size());
+
+        assertEquals(
+                TransactionType.TRANSFER_OUT,
+                source.getTransactions().get(0).getType()
+        );
+
+        assertEquals(
+                TransactionType.TRANSFER_IN,
+                target.getTransactions().get(0).getType()
+        );
+    }
 }

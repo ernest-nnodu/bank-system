@@ -24,6 +24,14 @@ public class BankAccount {
         this.balance = balance;
     }
 
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+
+    public String getAccountHolderName() {
+        return accountHolderName;
+    }
+
     public BigDecimal getBalance() {
         return this.balance;
     }
@@ -43,9 +51,7 @@ public class BankAccount {
     public void withdraw(BigDecimal amount) {
         validateAmount(amount);
 
-        if (amount.compareTo(this.balance) > 0) {
-            throw new InsufficientFundsException("Account " + this.accountNumber + " have Insufficient funds");
-        }
+        hasSufficientFunds(amount);
 
         this.balance = this.balance.subtract(amount);
         this.transactions.add(
@@ -64,13 +70,26 @@ public class BankAccount {
         }
 
         validateAmount(amount);
-        this.withdraw(amount);
+        hasSufficientFunds(amount);
+        this.balance = this.balance.subtract(amount);
         try {
-            target.deposit(amount);
+            target.transferIn(amount);
         } catch (Exception e) {
-            this.deposit(amount); // rollback
+            this.balance = this.balance.add(amount); // rollback
             throw e;
         }
+
+        this.transactions.add(
+                new Transaction(accountNumber, TransactionType.TRANSFER_OUT, amount, Instant.now())
+        );
+    }
+
+    public void transferIn(BigDecimal amount) {
+        validateAmount(amount);
+        this.balance = this.balance.add(amount);
+        this.transactions.add(
+                new Transaction(accountNumber, TransactionType.TRANSFER_IN, amount, Instant.now())
+        );
     }
 
     @Override
@@ -129,6 +148,12 @@ public class BankAccount {
 
         if (amount.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("amount should be greater than zero");
+        }
+    }
+
+    private void hasSufficientFunds(BigDecimal amount) {
+        if (amount.compareTo(this.balance) > 0) {
+            throw new InsufficientFundsException("Account " + this.accountNumber + " have Insufficient funds");
         }
     }
 }
