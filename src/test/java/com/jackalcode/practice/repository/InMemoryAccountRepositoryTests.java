@@ -74,4 +74,20 @@ public class InMemoryAccountRepositoryTests {
                 () -> repository.findByAccountNumber("UNKNOWN")
         );
     }
+
+    @Test
+    void save_shouldStoreMultipleAccounts() {
+
+        BankAccount account1 =
+                new BankAccount("A1", "Alice", new BigDecimal("100"));
+
+        BankAccount account2 =
+                new BankAccount("A2", "Bob", new BigDecimal("200"));
+
+        repository.save(account1);
+        repository.save(account2);
+
+        assertTrue(repository.exists("A1"));
+        assertTrue(repository.exists("A2"));
+    }
 }
