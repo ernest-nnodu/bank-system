@@ -116,4 +116,18 @@ public class InMemoryAccountRepositoryTests {
 
         assertEquals(2, result.size());
     }
+
+    @Test
+    void getAccountsWithBalanceGreaterThan_shouldFilterAccounts() {
+
+        repository.save(new BankAccount("A1", "Alice", new BigDecimal("100")));
+        repository.save(new BankAccount("A2", "Bob", new BigDecimal("300")));
+        repository.save(new BankAccount("A3", "Charlie", new BigDecimal("50")));
+
+        List<BankAccount> result =
+                repository.getAccountsWithBalanceGreaterThan(new BigDecimal("100"));
+
+        assertEquals(1, result.size());
+        assertEquals("A2", result.get(0).getAccountNumber());
+    }
 }

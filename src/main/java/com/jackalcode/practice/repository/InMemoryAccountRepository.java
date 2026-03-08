@@ -54,7 +54,10 @@ public class InMemoryAccountRepository implements AccountRepository {
 
     @Override
     public List<BankAccount> getAccountsWithBalanceGreaterThan(BigDecimal amount) {
-        return List.of();
+        return accounts.values()
+                .stream()
+                .filter(acc -> acc.getBalance().compareTo(amount) > 0)
+                .toList();
     }
 
     @Override
