@@ -67,6 +67,22 @@ public class BankService {
         }
     }
 
+    public void transfer(String sourceAccountNumber, String targetAccountNumber, BigDecimal amount) {
+
+        BankAccount sourceAccount;
+        BankAccount targetAccount;
+
+        sourceAccount = getAccountByAccountNumber(sourceAccountNumber);
+        targetAccount = getAccountByAccountNumber(targetAccountNumber);
+        validateAmount(amount);
+
+        try {
+            sourceAccount.transferTo(targetAccount, amount);
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
     private BankAccount getAccountByAccountNumber(String accountNumber) {
         if (accountNumber == null || accountNumber.isBlank()) {
             throw new IllegalArgumentException("Account is required");

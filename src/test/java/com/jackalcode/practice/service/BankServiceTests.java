@@ -81,4 +81,18 @@ public class BankServiceTests {
                 bank.getAccount("A1").getBalance()
         );
     }
+
+    @Test
+    void transfer_shouldMoveMoneyBetweenAccounts() {
+
+        BankService bank = new BankService();
+
+        bank.createAccount("A1", "Alice", new BigDecimal("200"));
+        bank.createAccount("A2", "Bob", new BigDecimal("100"));
+
+        bank.transfer("A1", "A2", new BigDecimal("50"));
+
+        assertEquals(new BigDecimal("150"), bank.getAccount("A1").getBalance());
+        assertEquals(new BigDecimal("150"), bank.getAccount("A2").getBalance());
+    }
 }
