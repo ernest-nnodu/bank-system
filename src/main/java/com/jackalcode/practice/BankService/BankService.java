@@ -35,4 +35,9 @@ public class BankService {
 
         return newAccount;
     }
+
+    public BankAccount getAccount(String accountNumber) {
+
+        return accounts.get(accountNumber);
+    }
 }

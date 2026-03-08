@@ -39,4 +39,16 @@ public class BankServiceTests {
                 () -> bank.createAccount("A1", "Bob", new BigDecimal("50"))
         );
     }
+
+    @Test
+    void getAccount_shouldReturnAccount() {
+
+        BankService bank = new BankService();
+
+        bank.createAccount("A1", "Alice", new BigDecimal("100"));
+
+        BankAccount account = bank.getAccount("A1");
+
+        assertEquals("Alice", account.getAccountHolderName());
+    }
 }
