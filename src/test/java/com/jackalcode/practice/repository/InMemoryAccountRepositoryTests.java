@@ -90,4 +90,18 @@ public class InMemoryAccountRepositoryTests {
         assertTrue(repository.exists("A1"));
         assertTrue(repository.exists("A2"));
     }
+
+    @Test
+    void save_shouldFailWhenAccountAlreadyExists() {
+
+        BankAccount account =
+                new BankAccount("A1", "Alice", new BigDecimal("100"));
+
+        repository.save(account);
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> repository.save(account)
+        );
+    }
 }

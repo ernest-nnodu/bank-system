@@ -18,6 +18,9 @@ public class InMemoryAccountRepository implements AccountRepository {
     public void save(BankAccount account) {
         Objects.requireNonNull(account, "Account is required");
 
+        if (exists(account.getAccountNumber())) {
+            throw new IllegalArgumentException("Account already exists with account number: " + account.getAccountNumber());
+        }
         accounts.put(account.getAccountNumber(), account);
     }
 
