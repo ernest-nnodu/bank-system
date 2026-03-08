@@ -51,4 +51,27 @@ public class InMemoryAccountRepositoryTests {
 
         assertFalse(exists);
     }
+
+    @Test
+    void findByAccountNumber_shouldReturnStoredAccount() {
+
+        BankAccount account =
+                new BankAccount("A1", "Alice", new BigDecimal("200"));
+
+        repository.save(account);
+
+        BankAccount found = repository.findByAccountNumber("A1");
+
+        assertEquals("Alice", found.getAccountHolderName());
+        assertEquals(new BigDecimal("200"), found.getBalance());
+    }
+
+    @Test
+    void findByAccountNumber_shouldThrowWhenAccountNotFound() {
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> repository.findByAccountNumber("UNKNOWN")
+        );
+    }
 }

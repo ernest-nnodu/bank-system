@@ -24,8 +24,13 @@ public class InMemoryAccountRepository implements AccountRepository {
     @Override
     public BankAccount findByAccountNumber(String accountNumber) {
         Objects.requireNonNull(accountNumber, "Account number is required");
+        BankAccount account = accounts.get(accountNumber);
 
-        return accounts.get(accountNumber);
+        if (account == null) {
+            throw new IllegalArgumentException("Account not found with account number: " + accountNumber);
+        }
+
+        return account;
     }
 
     @Override
