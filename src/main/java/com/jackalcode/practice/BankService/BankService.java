@@ -25,13 +25,8 @@ public class BankService {
             throw new IllegalArgumentException("Account already exists with account number: " + accountNumber);
         }
 
-        BankAccount newAccount = null;
-        try {
-            newAccount = new BankAccount(accountNumber, accountHolderName, startingBalance);
-            accounts.put(accountNumber, newAccount);
-        } catch (Exception ex) {
-            System.out.println(ex.getMessage());
-        }
+        BankAccount newAccount = new BankAccount(accountNumber, accountHolderName, startingBalance);
+        accounts.put(accountNumber, newAccount);
 
         return newAccount;
     }
@@ -42,45 +37,28 @@ public class BankService {
     }
 
     public void deposit(String accountNumber, BigDecimal amount) {
-        BankAccount existingAccount;
 
+        BankAccount existingAccount = getAccountByAccountNumber(accountNumber);
         validateAmount(amount);
-        existingAccount = getAccountByAccountNumber(accountNumber);
 
-        try {
-            existingAccount.deposit(amount);
-        } catch (Exception ex) {
-            System.out.println(ex.getMessage());
-        }
+        existingAccount.deposit(amount);
     }
 
     public void withdraw(String accountNumber, BigDecimal amount) {
-        BankAccount existingAccount;
 
+        BankAccount existingAccount = getAccountByAccountNumber(accountNumber);
         validateAmount(amount);
-        existingAccount = getAccountByAccountNumber(accountNumber);
 
-        try {
-            existingAccount.withdraw(amount);
-        } catch (Exception ex) {
-            System.out.println(ex.getMessage());
-        }
+        existingAccount.withdraw(amount);
     }
 
     public void transfer(String sourceAccountNumber, String targetAccountNumber, BigDecimal amount) {
 
-        BankAccount sourceAccount;
-        BankAccount targetAccount;
-
-        sourceAccount = getAccountByAccountNumber(sourceAccountNumber);
-        targetAccount = getAccountByAccountNumber(targetAccountNumber);
+        BankAccount sourceAccount = getAccountByAccountNumber(sourceAccountNumber);
+        BankAccount targetAccount = getAccountByAccountNumber(targetAccountNumber);
         validateAmount(amount);
 
-        try {
-            sourceAccount.transferTo(targetAccount, amount);
-        } catch (Exception ex) {
-            throw ex;
-        }
+        sourceAccount.transferTo(targetAccount, amount);
     }
 
     private BankAccount getAccountByAccountNumber(String accountNumber) {
@@ -88,11 +66,12 @@ public class BankService {
             throw new IllegalArgumentException("Account is required");
         }
 
-        if (!accounts.containsKey(accountNumber)) {
+        BankAccount account = accounts.get(accountNumber);
+        if (account == null) {
             throw new IllegalArgumentException("Account not found with account number: " + accountNumber);
         }
 
-        return accounts.get(accountNumber);
+        return account;
     }
 
     private void validateAmount(BigDecimal amount) {
