@@ -3,6 +3,8 @@ package com.jackalcode.practice.service;
 
 import com.jackalcode.practice.BankService.BankService;
 import com.jackalcode.practice.domain.BankAccount;
+import com.jackalcode.practice.domain.Transaction;
+import com.jackalcode.practice.domain.TransactionType;
 import com.jackalcode.practice.exception.InsufficientFundsException;
 import org.junit.jupiter.api.Test;
 
@@ -119,6 +121,107 @@ public class BankServiceTests {
         assertThrows(
                 IllegalArgumentException.class,
                 () -> bank.deposit("UNKNOWN", new BigDecimal("10"))
+        );
+    }
+
+    @Test
+    void transfer_shouldCreateTwoTransactions() {
+
+        BankService bank = new BankService();
+
+        bank.createAccount("A1", "Alice", new BigDecimal("200"));
+        bank.createAccount("A2", "Bob", new BigDecimal("100"));
+
+        bank.transfer("A1", "A2", new BigDecimal("50"));
+
+        BankAccount source = bank.getAccount("A1");
+        BankAccount target = bank.getAccount("A2");
+
+        assertEquals(1, source.getTransactions().size());
+        assertEquals(1, target.getTransactions().size());
+
+        Transaction sourceTx = source.getTransactions().getFirst();
+        Transaction targetTx = target.getTransactions().getFirst();
+
+        assertEquals(TransactionType.TRANSFER_OUT, sourceTx.getType());
+        assertEquals(TransactionType.TRANSFER_IN, targetTx.getType());
+    }
+
+    @Test
+    void deposit_shouldRecordTransaction() {
+
+        BankService bank = new BankService();
+
+        bank.createAccount("A1", "Alice", new BigDecimal("100"));
+
+        bank.deposit("A1", new BigDecimal("40"));
+
+        BankAccount account = bank.getAccount("A1");
+
+        assertEquals(1, account.getTransactions().size());
+
+        Transaction tx = account.getTransactions().getFirst();
+
+        assertEquals(TransactionType.DEPOSIT, tx.getType());
+        assertEquals(new BigDecimal("40"), tx.getAmount());
+    }
+
+    @Test
+    void withdraw_shouldRecordTransaction() {
+
+        BankService bank = new BankService();
+
+        bank.createAccount("A1", "Alice", new BigDecimal("100"));
+
+        bank.withdraw("A1", new BigDecimal("25"));
+
+        BankAccount account = bank.getAccount("A1");
+
+        assertEquals(1, account.getTransactions().size());
+
+        Transaction tx = account.getTransactions().getFirst();
+
+        assertEquals(TransactionType.WITHDRAW, tx.getType());
+        assertEquals(new BigDecimal("25"), tx.getAmount());
+    }
+
+    @Test
+    void transfer_shouldRollbackWhenInsufficientFunds() {
+
+        BankService bank = new BankService();
+
+        bank.createAccount("A1", "Alice", new BigDecimal("100"));
+        bank.createAccount("A2", "Bob", new BigDecimal("100"));
+
+        assertThrows(
+                InsufficientFundsException.class,
+                () -> bank.transfer("A1", "A2", new BigDecimal("200"))
+        );
+
+        BankAccount source = bank.getAccount("A1");
+        BankAccount target = bank.getAccount("A2");
+
+        assertEquals(0, source.getTransactions().size());
+        assertEquals(0, target.getTransactions().size());
+
+        assertEquals(new BigDecimal("100"), source.getBalance());
+        assertEquals(new BigDecimal("100"), target.getBalance());
+    }
+
+    @Test
+    void transactionsList_shouldBeImmutable() {
+
+        BankService bank = new BankService();
+
+        bank.createAccount("A1", "Alice", new BigDecimal("100"));
+
+        BankAccount account = bank.getAccount("A1");
+
+        assertThrows(
+                UnsupportedOperationException.class,
+                () -> account.getTransactions().add(
+                        new Transaction("A1", TransactionType.DEPOSIT, new BigDecimal("10"))
+                )
         );
     }
 }
