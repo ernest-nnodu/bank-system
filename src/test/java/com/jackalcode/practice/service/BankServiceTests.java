@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class BankServiceTests {
 
@@ -24,5 +25,18 @@ public class BankServiceTests {
 
         assertEquals("A1", account.getAccountNumber());
         assertEquals(new BigDecimal("100"), account.getBalance());
+    }
+
+    @Test
+    void createAccount_shouldFailIfAccountExists() {
+
+        BankService bank = new BankService();
+
+        bank.createAccount("A1", "Alice", new BigDecimal("100"));
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> bank.createAccount("A1", "Bob", new BigDecimal("50"))
+        );
     }
 }

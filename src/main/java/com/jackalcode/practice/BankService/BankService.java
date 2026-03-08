@@ -21,6 +21,10 @@ public class BankService {
         Objects.requireNonNull(accountHolderName, "Account holder name is required");
         Objects.requireNonNull(startingBalance, "Starting balance is required");
 
+        if (accounts.containsKey(accountNumber)) {
+            throw new IllegalArgumentException("Account already exists with account number: " + accountNumber);
+        }
+
         BankAccount newAccount = null;
         try {
             newAccount = new BankAccount(accountNumber, accountHolderName, startingBalance);
