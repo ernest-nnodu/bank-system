@@ -73,19 +73,19 @@ public class BankAccount {
         validateAmount(amount);
         hasSufficientFunds(amount);
         this.balance = this.balance.subtract(amount);
+        Transaction transferTransaction = new Transaction(accountNumber, TransactionType.TRANSFER_OUT, amount);
+        this.transactions.add(transferTransaction);
+
         try {
             target.transferIn(amount);
         } catch (Exception e) {
             this.balance = this.balance.add(amount); // rollback
+            this.transactions.remove(transferTransaction); //Remove transfer transaction
             throw e;
         }
-
-        this.transactions.add(
-                new Transaction(accountNumber, TransactionType.TRANSFER_OUT, amount)
-        );
     }
 
-    public void transferIn(BigDecimal amount) {
+    private void transferIn(BigDecimal amount) {
         validateAmount(amount);
         this.balance = this.balance.add(amount);
         this.transactions.add(
