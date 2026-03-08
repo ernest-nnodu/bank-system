@@ -2,7 +2,9 @@ package com.jackalcode.practice.repository;
 
 import com.jackalcode.practice.domain.BankAccount;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -40,5 +42,23 @@ public class InMemoryAccountRepository implements AccountRepository {
     public boolean exists(String accountNumber) {
         Objects.requireNonNull(accountNumber, "Account number is required");
         return accounts.containsKey(accountNumber);
+    }
+
+    @Override
+    public List<BankAccount> getAllAccounts() {
+
+        return accounts.values()
+                .stream()
+                .toList();
+    }
+
+    @Override
+    public List<BankAccount> getAccountsWithBalanceGreaterThan(BigDecimal amount) {
+        return List.of();
+    }
+
+    @Override
+    public BigDecimal getTotalMoneyInBank() {
+        return null;
     }
 }

@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -103,5 +104,16 @@ public class InMemoryAccountRepositoryTests {
                 IllegalArgumentException.class,
                 () -> repository.save(account)
         );
+    }
+
+    @Test
+    void getAllAccounts_shouldReturnAllAccounts() {
+
+        repository.save(new BankAccount("A1", "Alice", new BigDecimal("100")));
+        repository.save(new BankAccount("A2", "Bob", new BigDecimal("200")));
+
+        List<BankAccount> result = repository.getAllAccounts();
+
+        assertEquals(2, result.size());
     }
 }
