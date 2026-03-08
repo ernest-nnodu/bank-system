@@ -62,6 +62,14 @@ public class InMemoryAccountRepository implements AccountRepository {
 
     @Override
     public BigDecimal getTotalMoneyInBank() {
-        return null;
+        if (accounts.isEmpty()) {
+            return BigDecimal.ZERO;
+        }
+
+        return accounts.values()
+                .stream()
+                .map(BankAccount::getBalance)
+                .reduce(BigDecimal::add)
+                .get();
     }
 }

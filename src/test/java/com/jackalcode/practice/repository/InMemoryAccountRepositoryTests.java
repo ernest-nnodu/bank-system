@@ -130,4 +130,24 @@ public class InMemoryAccountRepositoryTests {
         assertEquals(1, result.size());
         assertEquals("A2", result.get(0).getAccountNumber());
     }
+
+    @Test
+    void getTotalMoneyInBank_shouldReturnSumOfBalances() {
+
+        repository.save(new BankAccount("A1", "Alice", new BigDecimal("100")));
+        repository.save(new BankAccount("A2", "Bob", new BigDecimal("200")));
+        repository.save(new BankAccount("A3", "Charlie", new BigDecimal("50")));
+
+        BigDecimal total = repository.getTotalMoneyInBank();
+
+        assertEquals(new BigDecimal("350"), total);
+    }
+
+    @Test
+    void getTotalMoneyInBank_shouldReturnZeroWhenNoAccounts() {
+
+        BigDecimal total = repository.getTotalMoneyInBank();
+
+        assertEquals(BigDecimal.ZERO, total);
+    }
 }
