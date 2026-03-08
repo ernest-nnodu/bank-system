@@ -1,4 +1,4 @@
-package com.jackalcode.practice.day2;
+package com.jackalcode.practice.domain;
 
 public enum TransactionType {
 

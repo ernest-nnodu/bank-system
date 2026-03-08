@@ -1,4 +1,4 @@
-package com.jackalcode.practice.day1;
+package com.jackalcode.practice.domain;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;

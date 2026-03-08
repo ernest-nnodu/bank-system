@@ -1,5 +1,6 @@
-package com.jackalcode.practice.day2;
+package com.jackalcode.practice.domain;
 
+import com.jackalcode.practice.exception.InsufficientFundsException;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;

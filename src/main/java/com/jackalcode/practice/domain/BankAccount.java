@@ -1,7 +1,8 @@
-package com.jackalcode.practice.day2;
+package com.jackalcode.practice.domain;
+
+import com.jackalcode.practice.exception.InsufficientFundsException;
 
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
