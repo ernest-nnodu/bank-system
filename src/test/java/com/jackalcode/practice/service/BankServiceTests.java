@@ -3,6 +3,7 @@ package com.jackalcode.practice.service;
 
 import com.jackalcode.practice.BankService.BankService;
 import com.jackalcode.practice.domain.BankAccount;
+import com.jackalcode.practice.exception.InsufficientFundsException;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -94,5 +95,30 @@ public class BankServiceTests {
 
         assertEquals(new BigDecimal("150"), bank.getAccount("A1").getBalance());
         assertEquals(new BigDecimal("150"), bank.getAccount("A2").getBalance());
+    }
+
+    @Test
+    void transfer_shouldFailWhenInsufficientFunds() {
+
+        BankService bank = new BankService();
+
+        bank.createAccount("A1", "Alice", new BigDecimal("100"));
+        bank.createAccount("A2", "Bob", new BigDecimal("100"));
+
+        assertThrows(
+                InsufficientFundsException.class,
+                () -> bank.transfer("A1", "A2", new BigDecimal("200"))
+        );
+    }
+
+    @Test
+    void deposit_shouldFailWhenAccountNotFound() {
+
+        BankService bank = new BankService();
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> bank.deposit("UNKNOWN", new BigDecimal("10"))
+        );
     }
 }

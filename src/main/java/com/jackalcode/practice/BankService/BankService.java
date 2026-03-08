@@ -79,7 +79,7 @@ public class BankService {
         try {
             sourceAccount.transferTo(targetAccount, amount);
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            throw ex;
         }
     }
 
