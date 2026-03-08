@@ -38,6 +38,33 @@ public class BankService {
 
     public BankAccount getAccount(String accountNumber) {
 
+        return getAccountByAccountNumber(accountNumber);
+    }
+
+    public void deposit(String accountNumber, BigDecimal amount) {
+        BankAccount existingAccount;
+
+        if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Amount is required and should be greater than zero");
+        }
+
+        try {
+            existingAccount = getAccountByAccountNumber(accountNumber);
+            existingAccount.deposit(amount);
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    private BankAccount getAccountByAccountNumber(String accountNumber) {
+        if (accountNumber == null || accountNumber.isBlank()) {
+            throw new IllegalArgumentException("Account is required");
+        }
+
+        if (!accounts.containsKey(accountNumber)) {
+            throw new IllegalArgumentException("Account not found with account number: " + accountNumber);
+        }
+
         return accounts.get(accountNumber);
     }
 }

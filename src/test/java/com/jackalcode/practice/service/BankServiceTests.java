@@ -51,4 +51,19 @@ public class BankServiceTests {
 
         assertEquals("Alice", account.getAccountHolderName());
     }
+
+    @Test
+    void deposit_shouldIncreaseBalance() {
+
+        BankService bank = new BankService();
+
+        bank.createAccount("A1", "Alice", new BigDecimal("100"));
+
+        bank.deposit("A1", new BigDecimal("50"));
+
+        assertEquals(
+                new BigDecimal("150"),
+                bank.getAccount("A1").getBalance()
+        );
+    }
 }
