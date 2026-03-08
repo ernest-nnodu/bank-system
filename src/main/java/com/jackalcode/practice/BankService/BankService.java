@@ -44,13 +44,24 @@ public class BankService {
     public void deposit(String accountNumber, BigDecimal amount) {
         BankAccount existingAccount;
 
-        if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException("Amount is required and should be greater than zero");
-        }
+        validateAmount(amount);
+        existingAccount = getAccountByAccountNumber(accountNumber);
 
         try {
-            existingAccount = getAccountByAccountNumber(accountNumber);
             existingAccount.deposit(amount);
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    public void withdraw(String accountNumber, BigDecimal amount) {
+        BankAccount existingAccount;
+
+        validateAmount(amount);
+        existingAccount = getAccountByAccountNumber(accountNumber);
+
+        try {
+            existingAccount.withdraw(amount);
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
@@ -66,5 +77,11 @@ public class BankService {
         }
 
         return accounts.get(accountNumber);
+    }
+
+    private void validateAmount(BigDecimal amount) {
+        if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Amount is required and should be greater than zero");
+        }
     }
 }

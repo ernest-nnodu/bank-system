@@ -66,4 +66,19 @@ public class BankServiceTests {
                 bank.getAccount("A1").getBalance()
         );
     }
+
+    @Test
+    void withdraw_shouldDecreaseBalance() {
+
+        BankService bank = new BankService();
+
+        bank.createAccount("A1", "Alice", new BigDecimal("100"));
+
+        bank.withdraw("A1", new BigDecimal("30"));
+
+        assertEquals(
+                new BigDecimal("70"),
+                bank.getAccount("A1").getBalance()
+        );
+    }
 }
