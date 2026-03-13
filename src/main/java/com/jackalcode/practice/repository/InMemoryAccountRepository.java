@@ -47,13 +47,13 @@ public class InMemoryAccountRepository implements AccountRepository {
     @Override
     public List<BankAccount> getAllAccounts() {
 
-        return accounts.values()
-                .stream()
-                .toList();
+        return List.copyOf(accounts.values());
     }
 
     @Override
     public List<BankAccount> getAccountsWithBalanceGreaterThan(BigDecimal amount) {
+        Objects.requireNonNull(amount, "Amount is required");
+
         return accounts.values()
                 .stream()
                 .filter(acc -> acc.getBalance().compareTo(amount) > 0)
@@ -62,14 +62,10 @@ public class InMemoryAccountRepository implements AccountRepository {
 
     @Override
     public BigDecimal getTotalMoneyInBank() {
-        if (accounts.isEmpty()) {
-            return BigDecimal.ZERO;
-        }
 
         return accounts.values()
                 .stream()
                 .map(BankAccount::getBalance)
-                .reduce(BigDecimal::add)
-                .get();
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }
