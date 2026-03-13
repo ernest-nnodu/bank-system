@@ -10,6 +10,7 @@ import java.util.Objects;
 public class BankService {
 
     private final Map<String, BankAccount> accounts;
+    //private Object bankServiceLock = new Object();
 
     public BankService() {
         this.accounts = new HashMap<>();
@@ -36,7 +37,7 @@ public class BankService {
         return getAccountByAccountNumber(accountNumber);
     }
 
-    public void deposit(String accountNumber, BigDecimal amount) {
+    public synchronized void deposit(String accountNumber, BigDecimal amount) {
 
         BankAccount existingAccount = getAccountByAccountNumber(accountNumber);
         validateAmount(amount);
@@ -44,7 +45,7 @@ public class BankService {
         existingAccount.deposit(amount);
     }
 
-    public void withdraw(String accountNumber, BigDecimal amount) {
+    public synchronized void withdraw(String accountNumber, BigDecimal amount) {
 
         BankAccount existingAccount = getAccountByAccountNumber(accountNumber);
         validateAmount(amount);

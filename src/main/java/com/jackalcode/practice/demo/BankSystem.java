@@ -4,6 +4,7 @@ import com.jackalcode.practice.BankService.BankService;
 import com.jackalcode.practice.domain.BankAccount;
 
 import java.math.BigDecimal;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -14,16 +15,24 @@ import java.util.stream.IntStream;
 public class BankSystem {
 
     public static void main(String[] args) {
-        List<Future<?>> futureCustomers = new ArrayList<>();
 
         var bankService = new BankService();
         BankAccount sharedAccount = bankService.createAccount(
                 "1234",
                 "john",
                 BigDecimal.valueOf(10_000L));
-        System.out.println("Starting balance in shared account: " + sharedAccount.getBalance());
 
-        try (var executor = Executors.newFixedThreadPool(5)) {
+        List<Future<?>> futureCustomers = new ArrayList<>();
+        int numberOfThreads = 5;
+        int numberOfCustomers = 100;
+        int totalDepositPerThread = 550;
+        int totalWithdrawalPerThread = 550;
+        BigDecimal startingBalance = sharedAccount.getBalance();
+        BigDecimal expectedBalance = startingBalance
+                .add(BigDecimal.valueOf(totalDepositPerThread * numberOfCustomers))
+                .subtract(BigDecimal.valueOf(totalWithdrawalPerThread * numberOfCustomers));
+
+        try (var executor = Executors.newFixedThreadPool(numberOfThreads)) {
             IntStream.rangeClosed(1, 100)
                     .forEach(number -> futureCustomers.add(executor.submit(
                             Customer.customerOf(sharedAccount.getAccountNumber(), bankService))));
@@ -33,10 +42,14 @@ public class BankSystem {
             try {
                 future.get();
             } catch (InterruptedException | ExecutionException e) {
-                throw new RuntimeException(e);
+                System.out.println(e.getMessage());
             }
         });
 
-        System.out.println("Final balance in shared account: " + sharedAccount.getBalance());
+        BigDecimal finalBalance = sharedAccount.getBalance();
+
+        System.out.println("Starting balance in shared account: " + startingBalance);
+        System.out.println("Expected balance in shared account: " + expectedBalance);
+        System.out.println("Final balance in shared account: " + finalBalance);
     }
 }

@@ -1,14 +1,13 @@
 package com.jackalcode.practice.demo;
 
 import com.jackalcode.practice.BankService.BankService;
-import com.jackalcode.practice.domain.BankAccount;
 
 import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.stream.IntStream;
 
 public class Customer implements Runnable {
-    private String accountNumber;
+    private final String accountNumber;
     private final BankService bankService;
 
     public static Customer customerOf(String accountNumber, BankService bankService) {
@@ -30,5 +29,7 @@ public class Customer implements Runnable {
     public void run() {
         IntStream.rangeClosed(1, 10)
                 .forEach(amount -> bankService.deposit(accountNumber, BigDecimal.valueOf(amount * 10L)));
+        IntStream.rangeClosed(1, 10)
+                .forEach(amount -> bankService.withdraw(accountNumber, BigDecimal.valueOf(amount * 10L)));
     }
 }
