@@ -37,20 +37,22 @@ public class BankService {
         return getAccountByAccountNumber(accountNumber);
     }
 
-    public synchronized void deposit(String accountNumber, BigDecimal amount) {
+    public synchronized BigDecimal deposit(String accountNumber, BigDecimal amount) {
 
         BankAccount existingAccount = getAccountByAccountNumber(accountNumber);
         validateAmount(amount);
 
         existingAccount.deposit(amount);
+        return amount;
     }
 
-    public synchronized void withdraw(String accountNumber, BigDecimal amount) {
+    public synchronized BigDecimal withdraw(String accountNumber, BigDecimal amount) {
 
         BankAccount existingAccount = getAccountByAccountNumber(accountNumber);
         validateAmount(amount);
 
         existingAccount.withdraw(amount);
+        return amount;
     }
 
     public void transfer(String sourceAccountNumber, String targetAccountNumber, BigDecimal amount) {
