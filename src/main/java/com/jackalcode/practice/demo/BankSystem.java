@@ -21,15 +21,12 @@ public class BankSystem {
                 "john",
                 BigDecimal.valueOf(10_000L));
 
-        List<Future<?>> futureCustomers = new ArrayList<>();
+        List<Future<TotalTransaction>> futureCustomers = new ArrayList<>();
         int numberOfThreads = 5;
         int numberOfCustomers = 100;
-        int totalDepositPerThread = 550;
-        int totalWithdrawalPerThread = 550;
+        long totalDepositByCustomers = 0;
+        long totalWithdrawalByCustomers = 0;
         BigDecimal startingBalance = sharedAccount.getBalance();
-        BigDecimal expectedBalance = startingBalance
-                .add(BigDecimal.valueOf(totalDepositPerThread * numberOfCustomers))
-                .subtract(BigDecimal.valueOf(totalWithdrawalPerThread * numberOfCustomers));
 
         try (var executor = Executors.newFixedThreadPool(numberOfThreads)) {
             IntStream.rangeClosed(1, 100)
@@ -37,17 +34,26 @@ public class BankSystem {
                             Customer.customerOf(sharedAccount.getAccountNumber(), bankService))));
         }
 
-        futureCustomers.forEach(future -> {
+        for (Future<TotalTransaction> future : futureCustomers) {
             try {
-                future.get();
+                TotalTransaction totalTransaction = future.get();
+                totalDepositByCustomers += totalTransaction.totalDeposit().longValue();
+                totalWithdrawalByCustomers += totalTransaction.totalWithdraw().longValue();
+
             } catch (InterruptedException | ExecutionException e) {
                 System.out.println(e.getMessage());
             }
-        });
+        }
+
+        BigDecimal expectedBalance = startingBalance
+                .add(BigDecimal.valueOf(totalDepositByCustomers))
+                .subtract(BigDecimal.valueOf(totalWithdrawalByCustomers));
 
         BigDecimal finalBalance = sharedAccount.getBalance();
 
         System.out.println("Starting balance in shared account: " + startingBalance);
+        System.out.println("Total deposit by customers: " + totalDepositByCustomers);
+        System.out.println("Total withdrawn by customers: " + totalWithdrawalByCustomers);
         System.out.println("Expected balance in shared account: " + expectedBalance);
         System.out.println("Final balance in shared account: " + finalBalance);
     }
