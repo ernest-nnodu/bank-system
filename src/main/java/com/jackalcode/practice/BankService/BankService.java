@@ -10,7 +10,7 @@ import java.util.Objects;
 public class BankService {
 
     private final Map<String, BankAccount> accounts;
-    //private Object bankServiceLock = new Object();
+    private final Object transactionLock = new Object();
 
     public BankService() {
         this.accounts = new HashMap<>();
@@ -37,21 +37,25 @@ public class BankService {
         return getAccountByAccountNumber(accountNumber);
     }
 
-    public synchronized BigDecimal deposit(String accountNumber, BigDecimal amount) {
+    public BigDecimal deposit(String accountNumber, BigDecimal amount) {
 
         BankAccount existingAccount = getAccountByAccountNumber(accountNumber);
         validateAmount(amount);
 
-        existingAccount.deposit(amount);
+        synchronized (transactionLock) {
+            existingAccount.deposit(amount);
+        }
         return amount;
     }
 
-    public synchronized BigDecimal withdraw(String accountNumber, BigDecimal amount) {
+    public BigDecimal withdraw(String accountNumber, BigDecimal amount) {
 
         BankAccount existingAccount = getAccountByAccountNumber(accountNumber);
         validateAmount(amount);
 
-        existingAccount.withdraw(amount);
+        synchronized (transactionLock) {
+            existingAccount.withdraw(amount);
+        }
         return amount;
     }
 
