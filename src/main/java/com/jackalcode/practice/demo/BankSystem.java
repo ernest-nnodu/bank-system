@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.stream.IntStream;
@@ -22,16 +23,19 @@ public class BankSystem {
                 BigDecimal.valueOf(10_000L));
 
         List<Future<TotalTransaction>> futureCustomers = new ArrayList<>();
-        int numberOfThreads = 5;
+        int threadPoolSize = 5;
         int numberOfCustomers = 100;
         long totalDepositByCustomers = 0;
         long totalWithdrawalByCustomers = 0;
         BigDecimal startingBalance = sharedAccount.getBalance();
+        ExecutorService executor = Executors.newFixedThreadPool(threadPoolSize);
 
-        try (var executor = Executors.newFixedThreadPool(numberOfThreads)) {
+        try {
             IntStream.rangeClosed(1, 100)
                     .forEach(number -> futureCustomers.add(executor.submit(
                             Customer.customerOf(sharedAccount.getAccountNumber(), bankService))));
+        } finally {
+            executor.shutdown();
         }
 
         for (Future<TotalTransaction> future : futureCustomers) {
