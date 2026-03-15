@@ -13,6 +13,9 @@ public class Customer implements Callable<TotalTransaction> {
     private final String accountNumber;
     private final BankService bankService;
     private TotalTransaction totalTransaction;
+    private final RandomGenerator generator = RandomGenerator.getDefault();
+
+
 
     public static Customer customerOf(String accountNumber, BankService bankService) {
         Objects.requireNonNull(accountNumber, "Bank account number is required");
@@ -46,12 +49,13 @@ public class Customer implements Callable<TotalTransaction> {
         return new TotalTransaction(totalDeposit, totalWithdrawn);
     }
 
-    private static int getAmount() {
-        RandomGenerator generator = RandomGenerator.getDefault();
+    private int getAmount() {
         return generator.nextInt(1, 101);
     }
 
     private BigDecimal deposit(int amount) {
+        System.out.printf("Depositing $%d from %s%n", amount, Thread.currentThread().getName());
+
         BigDecimal deposit = bankService.deposit(accountNumber, BigDecimal.valueOf(amount));
 
         if (deposit == null) {
@@ -61,6 +65,8 @@ public class Customer implements Callable<TotalTransaction> {
     }
 
     private BigDecimal withdraw(int amount) {
+        System.out.printf("Withdrawing $%d from %s%n", amount, Thread.currentThread().getName());
+
         BigDecimal withdraw = bankService.withdraw(accountNumber, BigDecimal.valueOf(amount));
 
         if (withdraw == null) {
