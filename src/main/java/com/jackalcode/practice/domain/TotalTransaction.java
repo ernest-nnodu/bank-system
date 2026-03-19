@@ -1,4 +1,4 @@
-package com.jackalcode.practice.demo;
+package com.jackalcode.practice.domain;
 
 import java.math.BigDecimal;
 

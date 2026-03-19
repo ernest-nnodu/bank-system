@@ -11,6 +11,8 @@ public class BankService {
 
     private final Map<String, BankAccount> accounts;
     private final Object transactionLock = new Object();
+    public static long successfulDeposits = 0;
+    public static long successfulWithdrawals = 0;
 
     public BankService() {
         this.accounts = new HashMap<>();
@@ -37,25 +39,42 @@ public class BankService {
         return getAccountByAccountNumber(accountNumber);
     }
 
-    public BigDecimal deposit(String accountNumber, BigDecimal amount) {
+    public synchronized BigDecimal deposit(String accountNumber, BigDecimal amount) {
 
         BankAccount existingAccount = getAccountByAccountNumber(accountNumber);
         validateAmount(amount);
 
-        synchronized (transactionLock) {
+        try {
             existingAccount.deposit(amount);
+            successfulDeposits++;
+        } catch (Exception e) {
+            System.out.println("Deposit failed: " + e.getMessage());
         }
+
+//        //synchronized (transactionLock) {
+//            existingAccount.deposit(amount);
+//        //}
+//        successfulTransactions++;
         return amount;
     }
 
-    public BigDecimal withdraw(String accountNumber, BigDecimal amount) {
+    public synchronized BigDecimal withdraw(String accountNumber, BigDecimal amount) {
 
         BankAccount existingAccount = getAccountByAccountNumber(accountNumber);
         validateAmount(amount);
 
-        synchronized (transactionLock) {
+        try {
             existingAccount.withdraw(amount);
+            successfulWithdrawals++;
+        } catch (Exception e) {
+            System.out.println("Withdraw failed: " + e.getMessage());
+            return BigDecimal.ZERO;
         }
+
+//        //synchronized (transactionLock) {
+//            existingAccount.withdraw(amount);
+//       // }
+//        successfulTransactions++;
         return amount;
     }
 

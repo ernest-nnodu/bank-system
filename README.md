@@ -237,11 +237,11 @@ Java 17 or later
 4. Run the simulation -> java com.jackalcode.practice.demo.BankSystem
 
 ### Example Output
-Starting balance: 10000
-Total deposits: 251430
-Total withdrawals: 249980
-Expected balance: 11450
-Actual balance: 11450
+- Starting balance: 10000
+- Total deposits: 251430
+- Total withdrawals: 249980
+- Expected balance: 11450
+- Actual balance: 11450
 
 If the expected balance equals the actual balance, the system passed the concurrency test.
 

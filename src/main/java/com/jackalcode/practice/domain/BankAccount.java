@@ -42,6 +42,7 @@ public class BankAccount {
 
     public void deposit(BigDecimal amount) {
 
+        System.out.println("Inside deposit in BankAccount, amount: " + amount + ", balance: " + balance);
         //Validate that amount is not null and greater than zero
         validateAmount(amount);
 
@@ -52,10 +53,13 @@ public class BankAccount {
         transactions.add(
                 new Transaction(accountNumber, TransactionType.DEPOSIT, amount)
         );
+
+        System.out.println("After deposit in BankAccount, balance: " + balance);
     }
 
     public void withdraw(BigDecimal amount) {
 
+        System.out.println("Inside withdraw in BankAccount, amount: " + amount + ", balance: " + balance);
         //Validate that amount is not null and greater than zero
         validateAmount(amount);
 
@@ -69,6 +73,8 @@ public class BankAccount {
         this.transactions.add(
                 new Transaction(accountNumber, TransactionType.WITHDRAW, amount)
         );
+
+        System.out.println("After withdraw in BankAccount, balance: " + balance);
 
     }
 
