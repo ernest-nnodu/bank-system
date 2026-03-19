@@ -1,6 +1,7 @@
 package com.jackalcode.practice.domain;
 
 import com.jackalcode.practice.exception.InsufficientFundsException;
+import lombok.Getter;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -10,8 +11,11 @@ import java.util.Objects;
 
 public class BankAccount {
 
+    @Getter
     private final String accountNumber;
-    private String accountHolderName;
+    @Getter
+    private final String accountHolderName;
+    @Getter
     private BigDecimal balance;
     private final List<Transaction> transactions;
 
@@ -26,36 +30,36 @@ public class BankAccount {
         this.balance = balance;
     }
 
-    public String getAccountNumber() {
-        return accountNumber;
-    }
-
-    public String getAccountHolderName() {
-        return accountHolderName;
-    }
-
-    public BigDecimal getBalance() {
-        return this.balance;
-    }
-
     public List<Transaction> getTransactions() {
         return Collections.unmodifiableList(this.transactions);
     }
 
     public void deposit(BigDecimal amount) {
+
+        //Validate that amount is not null and greater than zero
         validateAmount(amount);
+
+        //Update account balance
         this.balance = this.balance.add(amount);
+
+        //Store deposit transaction
         transactions.add(
                 new Transaction(accountNumber, TransactionType.DEPOSIT, amount)
         );
     }
 
     public void withdraw(BigDecimal amount) {
+
+        //Validate that amount is not null and greater than zero
         validateAmount(amount);
 
+        //Check that account have sufficient balance to satisfy withdraw amount
         hasSufficientFunds(amount);
 
+        //Update balance after withdraw
         this.balance = this.balance.subtract(amount);
+
+        //store withdraw transaction
         this.transactions.add(
                 new Transaction(accountNumber, TransactionType.WITHDRAW, amount)
         );
@@ -63,24 +67,34 @@ public class BankAccount {
     }
 
     public void transferTo(BankAccount target, BigDecimal amount) {
+
+        //Check that target account is not null
         if (target == null) {
             throw new IllegalArgumentException("Target account is required");
         }
 
+        //Check that target account is not the same as the source account
         if (this.equals(target)) {
             throw new IllegalArgumentException("Cannot transfer to the same account");
         }
 
+        //Validate amount is not null and greater than zero
         validateAmount(amount);
+
+        //Check source account have sufficient funds for transfer
         hasSufficientFunds(amount);
+
+        //Update account balance as per transfer amount
         this.balance = this.balance.subtract(amount);
+
+        //Store transfer transaction
         Transaction transferTransaction = new Transaction(accountNumber, TransactionType.TRANSFER_OUT, amount);
         this.transactions.add(transferTransaction);
 
         try {
             target.transferIn(amount);
         } catch (Exception e) {
-            this.balance = this.balance.add(amount); // rollback
+            this.balance = this.balance.add(amount); // rollback transfer if unsuccessful
             this.transactions.remove(transferTransaction); //Remove transfer transaction
             throw e;
         }
