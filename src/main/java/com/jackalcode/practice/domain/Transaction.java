@@ -1,10 +1,13 @@
 package com.jackalcode.practice.domain;
 
+import lombok.Getter;
+
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Objects;
 import java.util.UUID;
 
+@Getter
 public class Transaction {
 
     private final String id;
@@ -14,32 +17,15 @@ public class Transaction {
     private final Instant timestamp;
 
     public Transaction(String accountNumber, TransactionType type, BigDecimal amount) {
+
+        //Validate that accountNumber, transaction type, and amount are provided, amount should be grater than zero
         validateTransactionDetails(accountNumber, type, amount);
+
         this.id = UUID.randomUUID().toString();
         this.accountNumber = accountNumber;
         this.type = type;
         this.amount = amount;
         this.timestamp = Instant.now();
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public String getAccountNumber() {
-        return accountNumber;
-    }
-
-    public TransactionType getType() {
-        return type;
-    }
-
-    public BigDecimal getAmount() {
-        return amount;
-    }
-
-    public Instant getTimestamp() {
-        return timestamp;
     }
 
     @Override
