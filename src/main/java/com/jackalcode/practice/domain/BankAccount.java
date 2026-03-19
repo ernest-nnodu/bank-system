@@ -21,8 +21,14 @@ public class BankAccount {
 
     public BankAccount(String accountNumber, String accountHolderName, BigDecimal balance) {
         this.transactions = new ArrayList<>();
+
+        //Validate that account is not null
         validateAccountNumber(accountNumber);
+
+        //Validate that account holder name is not null
         validateAccountHolderName(accountHolderName);
+
+        //Validate that balance is not null and it is greater than zero
         validateBalance(balance);
 
         this.accountNumber = accountNumber;
@@ -169,7 +175,7 @@ public class BankAccount {
 
     private void hasSufficientFunds(BigDecimal amount) {
         if (amount.compareTo(this.balance) > 0) {
-            throw new InsufficientFundsException("Account " + this.accountNumber + " have Insufficient funds");
+            throw new InsufficientFundsException("Account " + this.accountNumber + " have Insufficient funds: " + balance);
         }
     }
 }
