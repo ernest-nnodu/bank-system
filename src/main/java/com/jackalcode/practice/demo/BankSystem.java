@@ -26,7 +26,7 @@ public class BankSystem {
         List<Future<TotalTransaction>> futureCustomers = new ArrayList<>();
 
         int threadPoolSize = 5;
-        int numberOfCustomers = 1000;
+        int numberOfCustomers = 100;
         BigDecimal totalDepositByCustomers = BigDecimal.ZERO;
         BigDecimal totalWithdrawalByCustomers = BigDecimal.ZERO;
         BigDecimal startingBalance = sharedAccount.getBalance();

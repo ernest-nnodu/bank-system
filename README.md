@@ -189,7 +189,7 @@ Responsibilities:
 
 The system relies on a coarse-grained locking strategy.
 
-**100 Customer Tasks -> Executor Thread Pool -> Transaction Lock -> Shared Account Balance**
+**100 Customer Tasks → Executor Thread Pool → Bank service lock → Shared Account Balance**
 
 This model guarantees:
 
@@ -233,18 +233,21 @@ Java 17 or later
 ### Steps
 1. Clone the repository
 2. Navigate to the java directory
-3. Compile the project -> javac -d . com/jackalcode/practice/**/*.java
-4. Run the simulation -> java com.jackalcode.practice.demo.BankSystem
+3. Compile the project → javac com/jackalcode/practice/**/*.java
+4. Run the simulation → java com.jackalcode.practice.demo.BankSystem
 
 ### Example Output
-- Starting balance: 10000
-- Total deposits: 251430
-- Total withdrawals: 249980
-- Expected balance: 11450
-- Actual balance: 11450
+- Starting balance in shared account: 10000
+- Total deposit by customers: 1265863
+- Account deposits: 1265863
+- Total withdrawn by customers: 1259727
+- Account withdrawals: 1259727
+- Total number of transactions in shared account: 50000
+- Successful deposits: 25088
+- Successful withdraws: 24912
+- Expected balance in shared account: 16136
+- Final balance in shared account: 16136
+- Simulation successful? true
+
 
 If the expected balance equals the actual balance, the system passed the concurrency test.
-
-backend service architecture
-
-and highlights the challenges of designing correct concurrent systems.
