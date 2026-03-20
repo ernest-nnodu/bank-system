@@ -12,7 +12,6 @@ public class Customer implements Callable<TotalTransaction> {
     @Getter
     private final String accountNumber;
     private final BankService bankService;
-    private TotalTransaction totalTransaction;
     private static final int NUMBER_OF_TRANSACTIONS = 50;
     private final RandomGenerator generator = RandomGenerator.getDefault();
 
@@ -27,49 +26,53 @@ public class Customer implements Callable<TotalTransaction> {
 
     @Override
     public TotalTransaction call() {
-        //RandomGenerator generator = RandomGenerator.getDefault();
+
         BigDecimal totalDeposit = BigDecimal.ZERO;
         BigDecimal totalWithdrawn = BigDecimal.ZERO;
 
         for (int cycle = 0; cycle < NUMBER_OF_TRANSACTIONS; cycle++) {
 
-            totalDeposit = totalDeposit.add(deposit(getAmount()));
-
-            totalWithdrawn = totalWithdrawn.add(withdraw(10));
+            if (generateTransactionType() == TransactionType.DEPOSIT) {
+                totalDeposit = totalDeposit.add(deposit(generateAmount()));
+            } else {
+                totalWithdrawn = totalWithdrawn.add(withdraw(generateAmount()));
+            }
         }
 
+        //Return total successful deposit and withdraw made by customer
         return new TotalTransaction(totalDeposit, totalWithdrawn);
     }
 
-    private int getAmount() {
-        //return generator.nextInt(1, 101);
-        return 1;
+    private TransactionType generateTransactionType() {
+
+        return generator.nextInt(1, 3) == 1 ? TransactionType.DEPOSIT : TransactionType.WITHDRAW;
+    }
+
+    private int generateAmount() {
+        return generator.nextInt(1, 101);
     }
 
     private BigDecimal deposit(int amount) {
         //System.out.printf("Depositing $%d from %s%n", amount, Thread.currentThread().getName());
 
-        BigDecimal deposit = bankService.deposit(accountNumber, BigDecimal.valueOf(amount));
-
-        //Return zero if deposit was unsuccessful
-        if (deposit == null) {
+        try {
+            //Return deposited amount if deposit successful
+            return bankService.deposit(accountNumber, BigDecimal.valueOf(amount));
+        } catch (Exception e) {
+            //Return zero if deposit unsuccessful
             return BigDecimal.ZERO;
         }
-        return deposit;
     }
 
     private BigDecimal withdraw(int amount) {
         //System.out.printf("Withdrawing $%d from %s%n", amount, Thread.currentThread().getName());
 
-
-        BigDecimal withdraw = bankService.withdraw(accountNumber, BigDecimal.valueOf(amount));
-
-        //Return zero if withdraw was unsuccessful
-        if (withdraw == null) {
-            System.out.println((Object) null);
+        try {
+            //Return withdraw amount if withdraw successful
+            return bankService.withdraw(accountNumber, BigDecimal.valueOf(amount));
+        } catch (Exception e) {
+            //Return zero if withdraw unsuccessful
             return BigDecimal.ZERO;
         }
-
-        return withdraw;
     }
 }
