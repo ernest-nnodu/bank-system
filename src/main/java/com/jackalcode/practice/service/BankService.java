@@ -1,4 +1,4 @@
-package com.jackalcode.practice.BankService;
+package com.jackalcode.practice.service;
 
 import com.jackalcode.practice.domain.BankAccount;
 
@@ -11,6 +11,8 @@ public class BankService {
 
     private final Map<String, BankAccount> accounts;
     private final Object transactionLock = new Object();
+    public static long successfulDeposits = 0;
+    public static long successfulWithdrawals = 0;
 
     public BankService() {
         this.accounts = new HashMap<>();
@@ -37,25 +39,25 @@ public class BankService {
         return getAccountByAccountNumber(accountNumber);
     }
 
-    public BigDecimal deposit(String accountNumber, BigDecimal amount) {
+    public synchronized BigDecimal deposit(String accountNumber, BigDecimal amount) {
 
         BankAccount existingAccount = getAccountByAccountNumber(accountNumber);
         validateAmount(amount);
 
-        synchronized (transactionLock) {
-            existingAccount.deposit(amount);
-        }
+        existingAccount.deposit(amount);
+        successfulDeposits++;
+
         return amount;
     }
 
-    public BigDecimal withdraw(String accountNumber, BigDecimal amount) {
+    public synchronized BigDecimal withdraw(String accountNumber, BigDecimal amount) {
 
         BankAccount existingAccount = getAccountByAccountNumber(accountNumber);
         validateAmount(amount);
 
-        synchronized (transactionLock) {
-            existingAccount.withdraw(amount);
-        }
+        existingAccount.withdraw(amount);
+        successfulWithdrawals++;
+
         return amount;
     }
 
