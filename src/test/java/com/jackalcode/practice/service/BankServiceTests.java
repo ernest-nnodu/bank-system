@@ -1,7 +1,6 @@
 package com.jackalcode.practice.service;
 
 
-import com.jackalcode.practice.BankService.BankService;
 import com.jackalcode.practice.domain.BankAccount;
 import com.jackalcode.practice.domain.Transaction;
 import com.jackalcode.practice.domain.TransactionType;

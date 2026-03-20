@@ -1,6 +1,6 @@
 package com.jackalcode.practice.domain;
 
-import com.jackalcode.practice.BankService.BankService;
+import com.jackalcode.practice.service.BankService;
 import lombok.Getter;
 
 import java.math.BigDecimal;
@@ -53,7 +53,6 @@ public class Customer implements Callable<TotalTransaction> {
     }
 
     private BigDecimal deposit(int amount) {
-        //System.out.printf("Depositing $%d from %s%n", amount, Thread.currentThread().getName());
 
         try {
             //Return deposited amount if deposit successful
@@ -65,7 +64,6 @@ public class Customer implements Callable<TotalTransaction> {
     }
 
     private BigDecimal withdraw(int amount) {
-        //System.out.printf("Withdrawing $%d from %s%n", amount, Thread.currentThread().getName());
 
         try {
             //Return withdraw amount if withdraw successful

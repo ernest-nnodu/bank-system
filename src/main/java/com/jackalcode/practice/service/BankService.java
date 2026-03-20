@@ -1,4 +1,4 @@
-package com.jackalcode.practice.BankService;
+package com.jackalcode.practice.service;
 
 import com.jackalcode.practice.domain.BankAccount;
 
@@ -44,17 +44,9 @@ public class BankService {
         BankAccount existingAccount = getAccountByAccountNumber(accountNumber);
         validateAmount(amount);
 
-        try {
-            existingAccount.deposit(amount);
-            successfulDeposits++;
-        } catch (Exception e) {
-            System.out.println("Deposit failed: " + e.getMessage());
-        }
+        existingAccount.deposit(amount);
+        successfulDeposits++;
 
-//        //synchronized (transactionLock) {
-//            existingAccount.deposit(amount);
-//        //}
-//        successfulTransactions++;
         return amount;
     }
 
@@ -63,18 +55,9 @@ public class BankService {
         BankAccount existingAccount = getAccountByAccountNumber(accountNumber);
         validateAmount(amount);
 
-        try {
-            existingAccount.withdraw(amount);
-            successfulWithdrawals++;
-        } catch (Exception e) {
-            System.out.println("Withdraw failed: " + e.getMessage());
-            return BigDecimal.ZERO;
-        }
+        existingAccount.withdraw(amount);
+        successfulWithdrawals++;
 
-//        //synchronized (transactionLock) {
-//            existingAccount.withdraw(amount);
-//       // }
-//        successfulTransactions++;
         return amount;
     }
 
